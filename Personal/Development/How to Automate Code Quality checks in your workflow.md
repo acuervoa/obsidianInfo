@@ -102,3 +102,88 @@ Finally, you're ready to test your hook by adding a file to the git index and co
 chmod +x .git/hooks/pre-commit
 ````
 
+## Automatisation through Composer
+Composer comes also with a set of hoos allowing you to aumatize some of your tasks
+
+Thus, instead of manually creating a `pre-commit` script for every developers, the idea is to put the script somewhere in your codebase (e.g.in `/contrib`), and to ask Composer to install it automatically when installing or updating your project.
+
+Just add a new section in your composer.json:
+
+```json
+{
+	"scripts": {
+		"post-update-cmd": [
+			"mv .git/hooks/pre-commit .git/hooks/pre-commit.bak",
+			"cp contrib/pre-commit .git/hooks/pre-commit",
+			"chmod a+x .git/hooks/pre-commit"
+		},
+		"post-install-cmd": [
+			"mv .git/hooks/pre-commit .git/hooks/pre-commit.bak",
+			"cp contrib/pre-commit .git/hooks/pre-commit",
+			"chmod a+x .git/hooks/pre-commit"
+		]
+	}
+}
+````
+
+That way, anytime a dev will be running `composer install` or `composer update` , the script will be installed.
+
+## In your CI/CD pipeline
+The goal of the quality control in the CI/CD pipeline is two fold:
+-	first check the whole codebase against your project's quality rules, and break the build in case of any error (like a unit test would do)
+-	(optionally) perform a deeper analysis and publish a detailed build report that can be consulted by the devs at any time
+
+Of couse, it doesn't make sense to use a fixer (`phpcbf`, `php-cs-fixer`) in the pipeline as it would modify the code **after** it has been pulled from the repo, and we don't want the code to be modified without any control of the devs.
+
+Checking your whole codebase will have a significant impact on the build time. it can vary from few seconds to few minutes, depending on your code size. For your information, on a 40000 LoC project, it takes approximately 5 seconds for `phpcs` and 40 seconds for `phpmd`, with a relatively "light" analysis.
+
+Regarding the deeper analysis, we'll use `phpcs` and `phpmd` to raise errors/warnings and to publish the results, either in "human-readable" reports for devs (e.g. on a static website) with a notification on Slack, or in a standard format (`junit`, `checkstyle`, other...) to be integrated in a statistics tool like `Sonar` or `PhpMetrics`
+
+Here is a simple example of a gitlab-ci's pipeline allowing to build, test & check a PHP app and to publish the reports to gitlab pages
+
+```yaml
+image: composer
+
+stages:
+  - test
+  - deploy
+  
+test:app:
+  stage: test
+  script:
+    - apk add --no-cache $PHPIZE_DEPS
+	- pecl install xdebug-2.6.0
+	- docker-php-ext-enable xdebug
+	- composer install
+	- ./vendor/bin/phpunit --testsuite=unit --coverage-text --colors=never --log-junit reports/phpunit-junit.log --testdox-html reports/phpunit-report.html
+	- ./vendor/bin/phpcs -sw --standard=phpcs_squiz.xml.dist src --basepath=. --report=full --report-file=reports/phpcs-report.log || echo "ok"
+	- ./vendor/bin/phpmd src html phpmd.xml.dist --reportfile reports/phpmd-report.html --ignore-violations-on-exit
+  artifacts:
+    paths:
+	  - reports
+	expire_in: 30m
+	
+pages:
+  stage: deploy
+  dependencies:
+    - test:app
+  script:
+    - mkdir public
+	- cp ci/pages/index.html public/
+	- cp reports/* public/
+  artifacts:
+    paths:
+	  - public
+  only:
+    - master
+
+````
+
+You can find all you need to bootstrap a PHP project with quality tools and git+gitlab integration on my [template-project](https://gitlab.com/mamyn0va/php-template)
+
+For your information, if you want to enable the `Gitlab Pages` for your project, you just have to create a job named `pages` in your pipeline. All that you put in `/public` will be accessible on the static Website of your project at the following URL: `https://<group-or-username>.pages.forge.orange-labs.fr/<project-name>`
+
+And since we're talking about `Git Pages`, we can aldo use it to host the API documentation (PHPDoc, JavaDoc, or other), the tests reports with code coverage, and the `Swagger` documentation.
+
+---
+Have a look at the [DigitalPulp plugins](https://github.com/digitalpulp/pre-commit-php.git)
