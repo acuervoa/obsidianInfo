@@ -1,0 +1,134 @@
+{
+  "theme": "obsidian",
+  "pluginEnabledStatus": {
+    "File explorer": true,
+    "Search": true,
+    "Quick switcher": true,
+    "Graph view": true,
+    "Backlinks": true,
+    "Command palette": true,
+    "Markdown format importer": true,
+    "Word count": true,
+    "Tag pane": true,
+    "Page preview": true,
+    "Starred": true,
+    "Custom CSS": true,
+    "Daily notes": true,
+    "Random note": true,
+    "Slides": true,
+    "Audio recorder": true,
+    "Open with default app": true,
+    "Zettelkasten prefixer": true
+  },
+  "workspaceLayout": {
+    "id": "c08309ec044eb904",
+    "type": "split",
+    "children": [
+      {
+        "id": "c361fb1aaadf2fd3",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Development/How to Automate Code Quality checks in your workflow.md",
+            "mode": "source"
+          }
+        }
+      },
+      {
+        "id": "99e7f00d0f6a6c5b",
+        "type": "leaf",
+        "active": true,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Development/How to Automate Code Quality checks in your workflow.md",
+            "mode": "preview"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "leftSidedock": {
+    "id": "3685bbf7e4957a91",
+    "type": "split",
+    "children": [
+      {
+        "id": "b522423ad682a7df",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "06bd65e4db54382a",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "d66ec1e3aaad3a50",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {}
+            }
+          },
+          {
+            "id": "aa464b98d68f74ed",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "rightSidedock": {
+    "id": "dbe1e148ee56ad2f",
+    "type": "split",
+    "children": [
+      {
+        "id": "f78b902f5fdf9eb9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "742ab9aa59f0c39d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {}
+            }
+          },
+          {
+            "id": "56cab4655a69a5bd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "lastOpenFiles": [
+    "Development/How to Automate Code Quality checks in your workflow.md",
+    "Untitled.md",
+    "Tools/Memcached.md",
+    "Development/Git hooks.md",
+    "Development/Code static analysis tools.md"
+  ],
+  "alwaysUpdateLinks": true,
+  "foldHeading": true,
+  "foldIndent": true,
+  "showLineNumber": true
+}
